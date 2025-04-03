@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasbeeh App</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Remix icon CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" integrity="sha512-XcIsjKMcuVe0Ucj/xgIXQnytNwBttJbNjltBV18IOnru2lDPe9KRRyvCXw6Y5H415vbBLRm8+q6fmLUU7DfO6Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    
+    <div class="container">
+        <header>
+            <h1 class="title">سبحة</h1>
+            <button id="menuBtn" class="icon-button">
+                <i class="ri-menu-2-line"></i>
+            </button>
+        </header>
+
+        <div class="tasbeeh-area">
+            <div class="dhikr"><p></p></div>
+
+            <div class="showcase">
+                <div class="counter-holder">
+                    <h2>
+                        <span class="finish"></span>
+                        / 
+                        <span class="count"></span>
+                    </h2>
+                    <div class="total-finishes">
+                        <p>مرات الانهاء: <span>0</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <button id="countBtn" title="احتسب مرة"></button>
+        </div>
+
+        <footer>
+            <div class="controls">
+                <div class="sounds-container"></div>
+
+                <button id="soundsControl" class="icon-button" title="اختيار الصوت">
+                    <i class="ri-sound-module-fill"></i>
+                </button>
+
+                <button id="soundBtn" class="icon-button disable" title="أطفئ مؤثرات الصوت">
+                    <i class="ri-volume-mute-line"></i>
+                </button>
+
+                <button id="resetBtn" class="icon-button" title="صفر العداد">
+                    <i class="ri-restart-line"></i>
+                </button>
+            </div>
+
+            <div class="clock">
+                <span></span>
+                <span class="date"></span>
+                <span class="dot"></span>
+            </div>
+        </footer>
+
+        <div class="sidebar">
+            <header>
+                <h1 class="title">حلقة التسبيح</h1>
+                <div class="buttons">
+                    <!-- 
+                    ! This Btn Has Been Blocked Because We Stop The Functionality Of It In JS File
+                    <button id="addBtn" class="icon-button" title="اضف ذكرا">
+                        <i class="ri-add-fill"></i>
+                    </button>
+                     -->
+                    <button id="hideSideBar" class="icon-button" title="ارجع للوراء">
+                        <i class="ri-arrow-left-long-line"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="adhkar-area"></div>
+        </div>
+
+        <div class="reset-confirmation">
+            <div class="wrapper">
+                <button class="close-button" id="closeConfirmation">
+                    <i class="ri-close-large-line"></i>
+                </button>
+                <div>
+                    <h4>هل أنت متأكد ؟</h4>
+                    <p>سيتم تصفير العداد بالكامل</p>
+                </div>
+    
+                <div class="buttons">
+                    <button class="cancel">الغاء</button>
+                    <button class="ok">حسنا</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="dhikr-form">
+            <form action="#">
+                <button class="close-button" id="closeForm">
+                    <i class="ri-close-large-line"></i>
+                </button>
+                <input type="text" id="dhikr-text" placeholder="أدخل نص التسبيح">
+                <input type="text" id="dhikr-meaning" placeholder="أدخل معنى لنص التسبيح">
+                <input type="number" id="dhikr-count-finish" placeholder="أدخل عدد تكرار التسبيح" min="1">
+                <input 
+                    type="submit"
+                    id="saveBtn" 
+                    value="حفظ"
+                    onclick="(e) => e.preventDefault()"
+                >
+            </form>
+        </div>
+    </div>
+
+    
+
+    <script src="js/script.js"></script>
+    <script src="js/clock.js"></script>
+</body>
+</html>

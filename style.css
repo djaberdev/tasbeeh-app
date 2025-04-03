@@ -1,0 +1,609 @@
+/* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Rakkas&display=swap');
+
+:root {
+    --main-green-color: #084a49;
+    --secondary-green-color: #0e9898;
+    --dark-gray-color: #b7c7c7;
+    --light-gray-color: #dce4e6;
+    --lighter-gray-color: hsl(180, 14%, 94%);
+    --white-color: #f7f7f7;
+    --yellow-color: #cb9a34;
+    --red-color: #cb1814;
+
+    --Rekkas-font: "Rakkas", serif;
+
+    --main-transition: 0.3s ease;
+    --secondary-transition: 0.6s ease;
+}
+
+/* Start Resets */
+html {
+    direction: rtl; /* For Arabic Sites */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Cairo", sans-serif;
+}
+
+*:focus { outline: none }
+
+ul li { list-style: none }
+
+button,
+input[type="submit"] {
+    border: none;
+    cursor: pointer;
+}
+
+input { border: none; }
+
+/* Start Global */
+body {
+    background-color: var(--white-color);
+    overflow: hidden visible;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    overflow: hidden;
+}
+
+.container header,
+.container .sidebar header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+}
+
+.container header .title,
+.container .sidebar header .title {
+    font-family: var(--Rekkas-font);
+    font-size: 36px;
+    line-height: 1;
+}
+
+.container button.icon-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--light-gray-color);
+    border-radius: 4px;
+    transition: var(--main-transition);
+}
+
+.container button.icon-button:hover {
+    background-color: var(--dark-gray-color);
+}
+
+.container button.icon-button:active {
+    scale: 0.94;
+}
+
+.container button.icon-button i {
+    font-size: 19px;
+}
+
+.container .tasbeeh-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.container .tasbeeh-area .dhikr {
+    width: 100%;
+    position: relative;
+    padding: 20px;
+    background-color: var(--main-green-color);
+    border-radius: 12px;
+    text-align: center;
+}
+
+.container .tasbeeh-area .dhikr::before {
+    content: "الذكر المختار";
+    position: absolute;
+    top: -20px;
+    right: 20px;
+    padding: 4px 12px;
+    background-color: var(--yellow-color);
+    color: var(--white-color);
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.container .tasbeeh-area .dhikr p {
+    font-size: 20px;
+    font-weight: 500;
+    color: white;
+}
+
+.container .tasbeeh-area .showcase {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container .tasbeeh-area .showcase .counter-holder {
+    width: 300px;
+    padding: 16px 0;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.08) 0px 4px 6px -2px;
+}
+
+.container .tasbeeh-area .showcase .counter-holder h2 {
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.container .tasbeeh-area .showcase .counter-holder h2 span.count {
+    font-size: 46px;
+}
+
+.container .tasbeeh-area .showcase .total-finishes {
+    padding: 6px 16px;
+    text-align: center;
+    background-color: var(--main-green-color);
+    border-radius: 4px;
+}
+
+.container .tasbeeh-area .showcase .total-finishes p {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--dark-gray-color);
+}
+
+.container .tasbeeh-area .showcase .total-finishes p span {
+    margin-right: 5px;
+    font-size: 20px;
+    color: var(--light-gray-color);
+}
+
+.container .tasbeeh-area #countBtn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--main-green-color);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.08) 0px 4px 6px -2px;
+    transition: var(--main-transition);
+}
+
+.container .tasbeeh-area #countBtn:hover {
+    background-color: hsl(179, 80%, 20%);
+}
+
+.container .tasbeeh-area #countBtn:active {
+    background-color: hsl(179, 80%, 25%);
+    scale: 0.95;
+}
+
+.container footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0px;
+}
+
+.container footer .controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.container footer .controls #soundBtn {
+    background-color: hsla(123, 40%, 39%, 0.5);
+    opacity: 1;
+}
+
+.container footer .controls #soundBtn.disable {
+    background-color: hsla(4, 70%, 52%, 0.5);
+    opacity: 0.8;
+}
+
+.container footer .controls .sounds-container {
+    position: absolute;
+    top: -80px;
+    right: 0;
+    background-color: var(--dark-gray-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 12px 15px;
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateY(-20px);
+    visibility: hidden;
+    transition: var(--secondary-transition);
+    z-index: 2;
+}
+
+.container footer .controls .sounds-container.show {
+    opacity: 1;
+    transform: translateY(0px);
+    visibility: visible;
+}
+
+.container footer .controls .sounds-container .sound-box {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--main-transition);
+    cursor: pointer;
+}
+
+.container footer .controls .sounds-container .sound-box::after {
+    content: "";
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0px;
+    height: 4px;
+    background-color: var(--main-green-color);
+    border-radius: 100vw;
+    transition: var(--main-transition);
+}
+
+.container footer .controls .sounds-container .sound-box.active::after { width: 20px; }
+
+.container footer .controls .sounds-container .sound-box:active {
+    scale: 0.93;
+}
+
+.container footer .controls .sounds-container .sound-box div {
+    width: 85%;
+    height: 85%;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.container footer .clock {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 15px;
+    background-color: var(--main-green-color);
+    border-radius: 6px;
+    color: var(--white-color);
+    font-size: 15px;
+    transition: 0.5s ease;
+    cursor: pointer;
+    user-select: none;
+}
+
+.container footer .clock .dot {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--yellow-color);
+    transition: 0.5s ease;
+}
+
+.container .sidebar {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    padding: 0px 20px 20px;
+    background-color: var(--light-gray-color);
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    overflow: auto;
+    visibility: hidden;
+    transition: var(--secondary-transition);
+}
+
+.container .sidebar.show {
+    left: 0;
+    visibility: visible;
+}
+
+.container .sidebar header .buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.container .sidebar header #hideSideBar {
+    background-color: var(--lighter-gray-color);
+}
+
+.container .sidebar header #hideSideBar:hover {
+    background-color: var(--dark-gray-color);
+}
+
+.container .sidebar header #addBtn {
+    background-color: var(--secondary-green-color);
+}
+
+.container .sidebar header #addBtn i {
+    color: var(--white-color);
+}
+
+.container .sidebar header #addBtn:hover {
+    background-color: hsl(180, 83%, 36%);
+}
+
+.container .sidebar .adhkar-area {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px 20px;
+}
+
+.container .sidebar .adhkar-area .dhikr-box {
+    position: relative;
+    padding: 15px;
+    background-color: var(--lighter-gray-color);
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.08) 0px 4px 6px -2px;
+    border: 2px solid transparent;
+    transition: var(--main-transition);
+    cursor: pointer;
+}
+
+.container .sidebar .adhkar-area .dhikr-box::before {
+    content: "الذكر المختار";
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    padding: 2px 12px;
+    background-color: var(--yellow-color);
+    color: var(--white-color);
+    border-radius: 4px;
+    font-size: 12px;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--main-transition);
+}
+
+.container .sidebar .adhkar-area .dhikr-box.selected {
+    border-color: var(--yellow-color);
+}
+
+.container .sidebar .adhkar-area .dhikr-box:hover,
+.container .sidebar .adhkar-area .dhikr-box.selected {
+    background-color: hsl(180, 14%, 98%);
+    transform: translateY(-1.5px);
+}
+
+.container .sidebar .adhkar-area .dhikr-box.selected::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+.container .sidebar .adhkar-area .dhikr-box .info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.container .sidebar .adhkar-area .dhikr-box .info h3 {
+    flex: 1;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--main-green-color);
+}
+
+.container .sidebar .adhkar-area .dhikr-box .info span {
+    padding: 4px 8px;
+    background-color: var(--main-green-color);
+    border-radius: 4px;
+    color: var(--white-color);
+    font-size: 15px;
+}
+
+.container .sidebar .adhkar-area .dhikr-box .meaning {
+    font-size: 15px;
+    font-weight: 500;
+    color: #555;
+    margin-top: 5px;
+}
+
+.reset-confirmation,
+.dhikr-form {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    scale: 0.7;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--secondary-transition);
+}
+
+.reset-confirmation.show,
+.dhikr-form.show {
+    scale: 1;
+    opacity: 1;
+    visibility: visible;
+}
+
+.reset-confirmation .wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    padding: 20px 15px 15px;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.reset-confirmation .wrapper::before {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 78%;
+    height: 5px;
+    border-radius: 100vw;
+    background-color: var(--main-green-color);
+}
+
+.reset-confirmation .wrapper .buttons {
+    margin-top: 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.reset-confirmation .wrapper .buttons button {
+    flex: 1;
+    padding: 5px 0px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    color: var(--white-color);
+    transition: var(--main-transition);
+}
+
+.reset-confirmation .wrapper .buttons button:active { scale: 0.95; }
+
+.reset-confirmation .wrapper .buttons button.ok,
+.dhikr-form form input[type="submit"] {
+    background-color: #3c8c40;
+    border-color: #3c8c40;
+}
+
+.reset-confirmation .wrapper .buttons button.ok:hover,
+.dhikr-form form input[type="submit"]:hover {
+    background-color: hsl(123, 40%, 43%);
+}
+
+.reset-confirmation .wrapper .buttons button.cancel {
+    background-color: #db3c30;
+    border-color: #db3c30;
+}
+
+.reset-confirmation .wrapper .buttons button.cancel:hover {
+    background-color: hsl(4, 70%, 55%);
+}
+
+.dhikr-form form {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    padding: 15px;
+    background-color: var(--white-color);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.dhikr-form form input {
+    width: 100%;
+    height: 45px;
+    border-radius: 6px;
+    transition: var(--main-transition);
+}
+
+.dhikr-form form input:not([type="submit"]) {
+    padding: 0 15px;
+    border: 1px solid #a1a1a1;
+    font-size: 17px;
+    font-weight: 600;
+    color: #222;
+    caret-color: var(--main-green-color);
+}
+
+.dhikr-form form input:not([type="submit"]):focus {
+    border-color: var(--main-green-color);
+}
+
+.dhikr-form form input:not([type="submit"])::placeholder {
+    font-size: 14px;
+    opacity: 1;
+    transition: var(--main-transition);
+}
+
+.dhikr-form form input:not([type="submit"]):focus::placeholder { opacity: 0; }
+
+.dhikr-form form input:not([type="submit"]).invalid {
+    border: 2px solid #db3c30;
+}
+
+.dhikr-form form input:not([type="submit"]).invalid::placeholder {
+    color: #db3c30;
+}
+
+.dhikr-form form input[type="submit"] { color: var(--white-color); }
+
+.close-button {
+    position: absolute;
+    top: -17.5px;
+    right: -17.5px;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: var(--white-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-button > i {
+    font-size: 16px;
+    opacity: 0.6;
+    transition: 0.2s ease;
+}
+
+.close-button:hover > i { opacity: 1; } 
+
+/* Responsiveness */
+@media screen and (min-width: 768px) {
+    .container {
+        border-right: 2px dashed var(--dark-gray-color);
+        border-left: 2px dashed var(--dark-gray-color);
+    }
+}
