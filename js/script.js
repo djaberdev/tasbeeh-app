@@ -124,7 +124,7 @@ updatedAdhkar.forEach((dhikr, index) => {
 // Precess Of Selecting The Needed Dhikr 
 const adhkarArray = Array.from(document.getElementsByClassName("dhikr-box"));
 
-adhkarArray.forEach((dhikrEl, index) => {
+adhkarArray.forEach(dhikrEl => {
     dhikrEl.addEventListener("click", (e) => {
 
         adhkarArray.forEach(dEl => dEl.classList.remove("selected"));
@@ -138,10 +138,18 @@ adhkarArray.forEach((dhikrEl, index) => {
 
     });
 
-    // Add The "selected" Class To The "dhikrEl" Depends On The Saved Dhikr Object Within The Local Storage
-    getSavedDhikr().id === (index + 1) ? dhikrEl.classList.add("selected") : false;
-
 });
+
+// Save The First "DhikrObject" As The Default One 
+// This Done Before The User Select Something Or When There Is No Saved Dhikr
+if (!localStorage.getItem("dhikrObject")) saveDhikr(updatedAdhkar[0]);
+
+// Add The "selected" Class To The "dhikrEl" Depends On The Saved Dhikr Object Within The Local Storage
+let savedDhikr = getSavedDhikr();
+if (savedDhikr) {
+    let filteredAdhkarArray = adhkarArray.filter(dhikrEl => (dhikrEl.getAttribute("data-index") == (savedDhikr.id - 1)));
+    filteredAdhkarArray.forEach(element => element.classList.add("selected"));
+};
 
 // Select Some Elements & Settings
 const dhikrHolder = document.querySelector(".dhikr p");
@@ -220,10 +228,18 @@ soundBoxes.forEach(soundBox => {
 
     });
 
-    // Add The "active" Class To The "soundBox" Depends On The Saved Sound Within The Local Storage
-    JSON.parse(localStorage.getItem("chosenSound")) === soundBox.getAttribute("data-sound") ? soundBox.classList.add("active") : false;
-
 });
+
+// Pick A Sound And Save It As The Default One 
+// This Done Before The User Select Something Or When There Is No Saved Sound
+if (!localStorage.getItem("chosenSound")) localStorage.setItem("chosenSound", JSON.stringify(soundBoxes[1].getAttribute("data-sound")));
+
+// Add The "active" Class To The "soundBox" Depends On The Saved Sound Within The Local Storage
+let savedSound = getSavedSound();
+if (savedSound) {
+    let filteredSoundBoxes = soundBoxes.filter(soundBox => (soundBox.getAttribute("data-sound") === savedSound));
+    filteredSoundBoxes.forEach(element => element.classList.add("active"));
+};
 
 function getSavedSound() {
     let savedSound = localStorage.getItem("chosenSound") ? JSON.parse(localStorage.getItem("chosenSound")) : alert("There is no saved sound!");
