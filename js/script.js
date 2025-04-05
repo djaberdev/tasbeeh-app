@@ -166,11 +166,11 @@ function addData(dhikrObj) {
     totalFinishes.textContent = dhikrObj.finishTimes;
 
     // Save Dhikr Object To Local Storage
-    saveData(dhikrObj);
+    saveDhikr(dhikrObj);
 
 };
 
-function saveData(dObject) {
+function saveDhikr(dObject) {
     localStorage.setItem("dhikrObject", JSON.stringify(dObject));
 }
 
@@ -258,7 +258,7 @@ function toggleIsEnabled() {
     // Toggle Process
     isEnabled = !isEnabled;
 
-    // Check For Playing Or Not Playing The Sound
+    // Check And Change The HTML
     soundChecker();
 
 };
@@ -278,8 +278,8 @@ function soundChecker() {
         soundBtn.classList.remove("disable");
         icon.classList.replace("ri-volume-mute-line", "ri-volume-up-line");
 
-    }
-}
+    };
+};
 
 soundBtn.addEventListener("click", toggleIsEnabled);
 
