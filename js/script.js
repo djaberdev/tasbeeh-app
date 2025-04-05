@@ -182,15 +182,15 @@ function getSavedDhikr() {
 /* --- Build Sound Control --- */
 const soundsEffects = [
     {
-        path: "/assets/audio/click.mp3",
+        path: "assets/audio/click.mp3",
         bgColor: "rgba(8, 74, 73, 0.7)"
     },
     {
-        path: "/assets/audio/pen-click.mp3",
+        path: "assets/audio/pen-click.mp3",
         bgColor: "rgba(203, 154, 52, 0.7)"
     },
     {
-        path: "/assets/audio/rightanswer.mp3",
+        path: "assets/audio/rightanswer.mp3",
         bgColor: "rgba(203, 24, 20, 0.7)"
     }
 ];
