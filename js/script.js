@@ -102,6 +102,10 @@ const updatedAdhkar = adhkar.map((dhikr, index) => (
 ));
 const adhkarContainer = document.querySelector(".adhkar-area");
 
+// Main Settings
+let counter;
+let finishCounter;
+
 // Create The Dhikr Box Element
 updatedAdhkar.forEach((dhikr, index) => {
     
@@ -135,6 +139,10 @@ adhkarArray.forEach(dhikrEl => {
         let dataIndex = Number(e.currentTarget.getAttribute("data-index"));
         let dhikrObject = updatedAdhkar[dataIndex];
         addData(dhikrObject);
+
+        // Reset Some Counters
+        counter = 0;
+        finishCounter = 0;
 
     });
 
@@ -285,8 +293,6 @@ soundBtn.addEventListener("click", toggleIsEnabled);
 
 /* --- Tasbeeh Functionality --- */
 const countBtn = document.getElementById("countBtn");
-let counter;
-let finishCounter;
 
 // Restore saved dhikr object from localStorage
 document.addEventListener("DOMContentLoaded", () => {
@@ -342,7 +348,7 @@ const resetBtn = document.getElementById("resetBtn");
 const okBtn = resetConfirmation.querySelector(".buttons .ok");
 const cancelBtn = resetConfirmation.querySelector(".buttons .cancel");
 
-function resetCounter() {
+function resetAll() {
     counter = 0;
     finishCounter = 0;
     let savedObject = getSavedDhikr();
@@ -356,7 +362,7 @@ resetBtn.onclick = () => resetConfirmation.classList.add("show");
 cancelBtn.onclick = () => resetConfirmation.classList.remove("show");
 okBtn.onclick = () => {
     resetConfirmation.classList.remove("show");
-    resetCounter();
+    resetAll();
 };
 
 /* --- Adding A New Dhikr --- */
