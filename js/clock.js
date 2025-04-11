@@ -42,6 +42,13 @@ function updateDate(formatedText) {
     textHolder.textContent = formatedText;
 };
 
+// Make The "updateTime()" Runs Every 1 Minute
+let duration = 60000; // => 01 minute
+
+let intID = setInterval(() => { updateTime() }, duration);
+
+window.addEventListener("close", clearInterval(intID));
+
 // Arrays Of Random Colors
 const colors = [
     {
