@@ -47,8 +47,6 @@ let duration = 60000; // => 01 minute
 
 let intID = setInterval(() => { updateTime() }, duration);
 
-window.addEventListener("close", clearInterval(intID));
-
 // Arrays Of Random Colors
 const colors = [
     {
