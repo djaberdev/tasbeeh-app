@@ -220,7 +220,7 @@ function addData(dhikrObj) {
     dhikrHolder.textContent = dhikrObj.text;
     dhikrCount.textContent = dhikrObj.actualCount < 10 ? `0${dhikrObj.actualCount}` : dhikrObj.actualCount;
     dhikrFinish.textContent = dhikrObj.countFinish < 10 ? `0${dhikrObj.countFinish}` : dhikrObj.countFinish;
-    totalFinishes.textContent = dhikrObj.finishTimes;
+    totalFinishes.textContent = dhikrObj.finishTimes < 10 ? `0${dhikrObj.finishTimes}` : dhikrObj.finishTimes ;
 
     // Save Dhikr Object To Local Storage
     saveDhikr(dhikrObj);
