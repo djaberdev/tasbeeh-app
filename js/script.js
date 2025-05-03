@@ -87,7 +87,7 @@ const adhkar = [
         finishTimes: 0
     },
     {
-        text: "حسبي الله ونعم الوكيل",
+        text: "حسبي الله لا إله إلا هو، عليه توكلت وهو رب العرش العظيم",
         meaning: "التوكل على الله حق التوكل",
         countFinish: 7,
         actualCount: 0,
@@ -105,6 +105,46 @@ const adhkarContainer = document.querySelector(".adhkar-area");
 // Main Settings
 let counter;
 let finishCounter;
+let currentLevel;
+let reachedLevelsCount;
+
+/* -- Template Using "getter/setter" To Trigger A Function When A Variable Get Updated -- */
+
+// 1. State object with custom getter/setter
+const reactiveState = {
+    _reachedLevelsCount: 0, // internal storage
+
+    get reachedLevelsCount() {
+        return this._reachedLevelsCount;
+    },
+
+    set reachedLevelsCount(value) {
+
+        const oldValue = this._reachedLevelsCount;
+        this._reachedLevelsCount = value;
+
+        // Call effect handler
+        onRLCChange(oldValue, value);
+
+    }
+};
+
+// 2. Handler that runs when the value changes
+function onRLCChange(oldValue, newValue) {
+    
+    // Check If The Previous State Has Changed To a New State
+    if (newValue > oldValue) {
+
+        displayRank(currentLevel, newValue);
+        onLevelUp(newValue);
+        saveLevelsCount();
+        
+    };
+
+};
+
+// 3. Example usage:
+// reactiveState.reachedLevelsCount = 1; // Triggers the onRLCChange() function
 
 // Create The Dhikr Box Element
 updatedAdhkar.forEach((dhikr, index) => {
@@ -140,9 +180,18 @@ adhkarArray.forEach(dhikrEl => {
         let dhikrObject = updatedAdhkar[dataIndex];
         addData(dhikrObject);
 
-        // Reset Some Counters
+        // Reset Counters
         counter = 0;
         finishCounter = 0;
+
+        // Reset User Progress Or Rank
+        currentLevel = "";
+        reachedLevelsCount = 0;
+        saveLevel();
+        saveLevelsCount();
+
+        // Close The Sidebar
+        sidebar.classList.remove("show");
 
     });
 
@@ -328,6 +377,10 @@ function addToCount() {
         counter = 0;
         savedObject.actualCount = counter;
 
+        // Set The Rank Of The User , Save It and Incease The Count Of The Reached Levels
+        setRank(savedObject.finishTimes);
+        saveLevel();
+        
     }
 
     // Save The "savedObject" After Editing It
@@ -355,7 +408,12 @@ function resetAll() {
     savedObject.actualCount = 0;
     savedObject.finishTimes = 0;
     addData(savedObject);
-}
+
+    currentLevel = "";
+    reactiveState.reachedLevelsCount = 0;
+    saveLevel();
+    saveLevelsCount();
+};
 
 // Click Events
 resetBtn.onclick = () => resetConfirmation.classList.add("show");
@@ -434,3 +492,166 @@ function addNewDhikr(dText, dCountFinish, dMeaning) {
 saveBtn.addEventListener("click", () => {
     getEnteredData();
 }); */
+
+/* --- Gamification | Rank System --- */
+const rankSystemBtn = document.getElementById("rankSystemBtn");
+const rankSystem = document.querySelector(".rank-system");
+const hideRankSystem = document.getElementById("hideRankSystem");
+const rankingArea = document.querySelector(".ranking-area");
+
+rankSystemBtn.onclick = () => rankSystem.classList.add("show");
+hideRankSystem.onclick = () => rankSystem.classList.remove("show");
+
+const levels = [
+    {
+        id: 1,
+        imageUrl: "assets/images/level-1.png",
+        title: "ذاكر لله",
+        start: 1,
+        end: 3
+    },
+    {
+        id: 2,
+        imageUrl: "assets/images/level-2.png",
+        title: "موصول بالله",
+        start: 4,
+        end: 6
+    },
+    {
+        id: 3,
+        imageUrl: "assets/images/level-3.png",
+        title: "مسبّح محترف",
+        start: 7,
+        end: 9
+    },
+    {
+        id: 4,
+        imageUrl: "assets/images/level-4.png",
+        title: "خاشع في الذكر",
+        start: 10,
+        end: 12
+    },
+];
+
+// Create Levels Elements
+levels.forEach((level) => {
+
+    const levelBox = document.createElement("div");
+    levelBox.className = "level-box";
+    levelBox.setAttribute("data-title", level.title);
+
+    const imageHolder = document.createElement("div");
+    imageHolder.className = "image-holder";
+    imageHolder.innerHTML = `<img src="${level.imageUrl}" alt="level ${level.id}">`;
+
+    const levelDetails = document.createElement("div");
+    levelDetails.className = "level-details";
+    levelDetails.innerHTML = `
+        <span class="level-title">${level.title}</span>
+        <p class="level-condition">
+            <span>اللإنهاء: ${level.id !== levels.length ? `<strong>[${level.start < 10 ? `0${level.start}` : level.start } - ${level.end < 10 ? `0${level.end}` : level.end }]</strong>` : `<strong>[${level.start < 10 ? `0${level.start}` : level.start}+]</strong>` }</span>
+        </p>
+    `;
+
+    levelBox.appendChild(imageHolder);
+    levelBox.appendChild(levelDetails);
+
+    rankingArea.appendChild(levelBox);
+
+});
+
+// Ranking System and Functionality
+const levelBoxes = Array.from(document.querySelectorAll(".level-box"));
+
+function setRank(currentFinishTimes) {
+
+    if (currentFinishTimes >= levels[0].start && currentFinishTimes <= levels[0].end) { 
+        currentLevel = levels[0].title;
+        reactiveState.reachedLevelsCount = 1;
+    } else if (currentFinishTimes >= levels[1].start && currentFinishTimes <= levels[1].end) { 
+        currentLevel = levels[1].title;
+        reactiveState.reachedLevelsCount = 2;
+    } else if (currentFinishTimes >= levels[2].start && currentFinishTimes <= levels[2].end) { 
+        currentLevel = levels[2].title;
+        reactiveState.reachedLevelsCount = 3;
+    } else {
+        currentLevel = levels[levels.length - 1].title;
+        reactiveState.reachedLevelsCount = 4;
+    };
+
+};
+
+// Save / Get Level
+function saveLevel() {
+    localStorage.setItem("current-level", JSON.stringify(currentLevel));
+};
+
+function getLevel() {
+    let savedLevel = localStorage.getItem("current-level") ? JSON.parse(localStorage.getItem("current-level")) : console.error("There is no saved level yet!");
+    return savedLevel;
+};
+
+// Save / Get Levels Count
+function saveLevelsCount() {
+    localStorage.setItem("reached-levels-count", JSON.stringify(reactiveState.reachedLevelsCount));
+};
+
+function getLevelsCount() {
+    let savedLevelsCount = localStorage.getItem("reached-levels-count") ? JSON.parse(localStorage.getItem("reached-levels-count")) : console.error("There is no saved levels count yet!");
+    return savedLevelsCount;
+};
+
+// ! cl => current level
+// ! rlc => reached levels count
+// ! lb => level box
+
+// Get The Saved Current Level and Reached Levels Count When The Pages Reloads
+const savedCL = getLevel();
+const savedRLC = getLevelsCount();
+
+function displayRank(cl, rlc) {
+    
+    // Check If The "cl" Is Exist and The "rlc" Also
+    if (cl !== "" && rlc !== 0) {
+
+        // ! This approach is about: display only the current level and don't care about the previous reached ones
+        // Get The Matched "levelBox" From The "levelBoxes"
+        // const filtredLevelBoxes = levelBoxes.filter((levelBox) => levelBox.getAttribute("data-title") === cl );
+        // // After The Previous Step We Now Add The Styles Of The Reached Level
+        // filtredLevelBoxes[0].classList.add("reached");
+
+        // ! This approach is about: display all the reached levels
+        // Get All The Matched "levelBoxes" and Highlight Them
+        levelBoxes.slice(0, rlc).forEach((lb) => lb.classList.add("reached"));
+
+    } 
+
+};
+
+// Displaying Process | On Page Reload
+displayRank(savedCL, savedRLC);
+
+/* --- Congratulate The User When He Reach A New Level --- */
+const alertArea = document.querySelector(".alert-area");
+const newLevel = document.querySelector(".alert-area .new-level");
+const newLevelImage = document.querySelector(".alert-area .new-level-image img");
+
+function onLevelUp(level) {
+    
+    // Get The Matched Level Object Using "level" It's A Number
+    const matchedLevel = levels[level - 1];
+    
+    // Update The HTML
+    newLevel.textContent = `0${matchedLevel.id}`;
+    newLevelImage.setAttribute("src", matchedLevel.imageUrl);
+    newLevelImage.setAttribute("alt", `level ${matchedLevel.id}`);
+
+    // Show The "alertArea"
+    alertArea.classList.add("show");
+    
+    // Hide The "alertArea"
+    setTimeout(() => {
+        alertArea.classList.remove("show");
+    }, 2000);
+
+};
