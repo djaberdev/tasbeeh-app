@@ -189,6 +189,7 @@ adhkarArray.forEach(dhikrEl => {
         reachedLevelsCount = 0;
         saveLevel();
         saveLevelsCount();
+        displayRank(currentLevel, reactiveState.reachedLevelsCount);
 
         // Close The Sidebar
         sidebar.classList.remove("show");
@@ -624,7 +625,13 @@ function displayRank(cl, rlc) {
         // Get All The Matched "levelBoxes" and Highlight Them
         levelBoxes.slice(0, rlc).forEach((lb) => lb.classList.add("reached"));
 
-    } 
+    } else {
+
+        // If There Is No Progress Then Unhighlight All The "levelBoxes"
+        levelBoxes.forEach(lb => lb.classList.remove
+        ("reached"));
+
+    };
 
 };
 
