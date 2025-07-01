@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // Get The Clock Container
 const clockContainer = document.querySelector(".clock");
 
@@ -191,6 +190,3 @@ clockContainer.addEventListener("click", (e) => {
     dot.style.backgroundColor = colorObj.dotColor;
 
 });
-
-
->>>>>>> 748dad7 (Initial commit)
