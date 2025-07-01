@@ -142,67 +142,93 @@ body {
 }
 
 .container .tasbeeh-area .showcase {
+    position: relative;
+    height: 260px;
+    width: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(-20px);
+}
+
+.container .tasbeeh-area .showcase .total-finishes {
+    position: absolute;
+    bottom: 8px;
+    right: -80px;
+    width: 55px;
+    height: 55px;
+    outline: 3px solid var(--dark-gray-color);
+    background-color: var(--main-green-color);
+    border-radius: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.container .tasbeeh-area .showcase .counter-holder {
-    width: 300px;
-    padding: 16px 0;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.08) 0px 4px 6px -2px;
+.container .tasbeeh-area .showcase .total-finishes p {
+    font-size: 19px;
+    letter-spacing: 1px;
+    color: var(--white-color);
 }
 
-.container .tasbeeh-area .showcase .counter-holder h2 {
+.container .tasbeeh-area .showcase svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.container .tasbeeh-area .showcase svg .bg {
+    fill: none;
+    stroke: var(--dark-gray-color);
+    stroke-width: 12;
+}
+
+.container .tasbeeh-area .showcase svg .progress {
+    fill: none;
+    stroke: var(--main-green-color);
+    stroke-width: 6;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 0.4s;
+}
+
+.container .tasbeeh-area .showcase #countBtn {
+    position: absolute;
+    width: 88%;
+    height: 88%;
+    border-radius: 50%;
+    background-color: var(--main-green-color);
+    transition: var(--main-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container .tasbeeh-area .showcase #countBtn:hover {
+    background-color: hsl(179, 80%, 20%);
+}
+
+.container .tasbeeh-area .showcase #countBtn:active {
+    background-color: hsl(179, 80%, 25%);
+    scale: 0.94;
+}
+
+.container .tasbeeh-area .showcase #countBtn .counter-holder {
+    position: absolute;
+    z-index: 2;
+    user-select: none;
+    color: var(--white-color);
+    cursor: pointer;
+}
+
+.container .tasbeeh-area .showcase #countBtn .counter-holder h2 {
     font-size: 32px;
     font-weight: 600;
 }
 
-.container .tasbeeh-area .showcase .counter-holder h2 span.count {
+.container .tasbeeh-area .showcase #countBtn .counter-holder h2 span.count {
     font-size: 46px;
-}
-
-.container .tasbeeh-area .showcase .total-finishes {
-    padding: 6px 16px;
-    text-align: center;
-    background-color: var(--main-green-color);
-    border-radius: 4px;
-}
-
-.container .tasbeeh-area .showcase .total-finishes p {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--light-gray-color);
-}
-
-.container .tasbeeh-area .showcase .total-finishes p span {
-    margin-right: 2px;
-    font-size: 20px;
-    color: var(--white-color);
-}
-
-.container .tasbeeh-area #countBtn {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background-color: var(--main-green-color);
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.08) 0px 4px 6px -2px;
-    transition: var(--main-transition);
-}
-
-.container .tasbeeh-area #countBtn:hover {
-    background-color: hsl(179, 80%, 20%);
-}
-
-.container .tasbeeh-area #countBtn:active {
-    background-color: hsl(179, 80%, 25%);
-    scale: 0.94;
 }
 
 /* Footer */
@@ -386,6 +412,10 @@ body {
 
 .container .sidebar .adhkar-area .dhikr-box {
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
     padding: 15px;
     background-color: var(--lighter-gray-color);
     border-radius: 6px;
@@ -411,6 +441,7 @@ body {
 }
 
 .container .sidebar .adhkar-area .dhikr-box.selected {
+    padding-top: 30px;
     border-color: var(--yellow-color);
 }
 
@@ -426,14 +457,62 @@ body {
 }
 
 .container .sidebar .adhkar-area .dhikr-box .info {
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
-.container .sidebar .adhkar-area .dhikr-box .info h3 {
+.container .sidebar .adhkar-area .dhikr-box .info span {
+    padding: 0 8px;
+    height: 40px;
+    min-width: 42px;
+    background-color: var(--main-green-color);
+    border-radius: 4px;
+    color: var(--white-color);
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container .sidebar .adhkar-area .dhikr-box .info #remove-dhikr {
+    width: 40px;
+    height: 40px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5554a;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.container .sidebar .adhkar-area .dhikr-box .info #remove-dhikr:hover {
+    background-color: hsl(4, 90%, 66%);
+}
+
+.container .sidebar .adhkar-area .dhikr-box .info #remove-dhikr:active {
+    scale: 0.93;
+}
+
+.container .sidebar .adhkar-area .dhikr-box .info #remove-dhikr > i {
+    font-size: 20px;
+    color: var(--white-color);
+}
+
+.container .sidebar .adhkar-area .dhikr-box .text {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     flex: 1;
+    justify-content: flex-end;
+}
+
+.container .sidebar .adhkar-area .dhikr-box .text h3 {
+    max-width: 100%;
     text-wrap: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -442,19 +521,10 @@ body {
     color: var(--main-green-color);
 }
 
-.container .sidebar .adhkar-area .dhikr-box .info span {
-    padding: 4px 8px;
-    background-color: var(--main-green-color);
-    border-radius: 4px;
-    color: var(--white-color);
-    font-size: 15px;
-}
-
-.container .sidebar .adhkar-area .dhikr-box .meaning {
+.container .sidebar .adhkar-area .dhikr-box .text .meaning {
     font-size: 15px;
     font-weight: 500;
     color: #555;
-    margin-top: 5px;
 }
 
 /* Overlays */
@@ -476,6 +546,7 @@ body {
     opacity: 0;
     visibility: hidden;
     transition: var(--secondary-transition);
+    z-index: 100;
 }
 
 .reset-confirmation.show,
@@ -572,11 +643,11 @@ body {
     background-color: hsl(4, 70%, 55%);
 }
 
-/*
+
 .dhikr-form form {
     position: relative;
     width: 100%;
-    max-width: 300px;
+    max-width: 350px;
     padding: 15px;
     background-color: var(--white-color);
     border-radius: 10px;
@@ -622,7 +693,7 @@ body {
     color: #db3c30;
 }
 
-.dhikr-form form input[type="submit"] { color: var(--white-color); }
+.dhikr-form form input[type="submit"] { color: var(--white-color); } 
 
 .close-button {
     position: absolute;
@@ -644,7 +715,6 @@ body {
 }
 
 .close-button:hover > i { opacity: 1; } 
-*/
 
 /* Rank System */
 .rank-system {

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tasbeeh App</title>
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png">
     <link rel="stylesheet" href="style.css">
     <!-- Remix icon CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css" integrity="sha512-XcIsjKMcuVe0Ucj/xgIXQnytNwBttJbNjltBV18IOnru2lDPe9KRRyvCXw6Y5H415vbBLRm8+q6fmLUU7DfO6Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -27,19 +28,24 @@
             <div class="dhikr"><p></p></div>
 
             <div class="showcase">
-                <div class="counter-holder">
-                    <h2>
-                        <span class="finish"></span>
-                        / 
-                        <span class="count"></span>
-                    </h2>
-                    <div class="total-finishes">
-                        <p>مرات الانهاء: <span>0</span></p>
+                <svg width="260" height="260">
+                    <circle class="bg" cx="130" cy="130" r="124" />
+                    <circle id="svg-progress" class="progress" cx="130" cy="130" r="124" />
+                </svg>
+                
+                <button id="countBtn" title="احتسب مرة">
+                    <div class="counter-holder">
+                        <h2>
+                            <span class="finish"></span>
+                            / 
+                            <span class="count"></span>
+                        </h2>
                     </div>
-                </div>
+                </button>
+                
+                <div class="total-finishes"><p></p></div>
             </div>
 
-            <button id="countBtn" title="احتسب مرة"></button>
         </div>
 
         <footer>
@@ -70,12 +76,11 @@
             <header>
                 <h1 class="title">حلقة التسبيح</h1>
                 <div class="buttons">
-                    <!-- 
-                    ! This Btn Has Been Blocked Because We Stop The Functionality Of It In JS File
+                    
                     <button id="addBtn" class="icon-button" title="اضف ذكرا">
                         <i class="ri-add-fill"></i>
                     </button>
-                     -->
+                    
                     <button id="hideSideBar" class="icon-button" title="ارجع للوراء">
                         <i class="ri-arrow-left-long-line"></i>
                     </button>
@@ -102,7 +107,7 @@
             </div>
         </div>
 
-       <!-- <div class="dhikr-form">
+        <div class="dhikr-form">
             <form action="#">
                 <button class="close-button" id="closeForm">
                     <i class="ri-close-large-line"></i>
@@ -117,7 +122,7 @@
                     onclick="(e) => e.preventDefault()"
                 >
             </form>
-        </div> -->
+        </div>
 
         <!-- Gamification | Rank System -->
         <div class="rank-system">
@@ -157,8 +162,7 @@
             </div>
         </div>
     </div>
-
-
+    
     <script src="js/script.js"></script>
     <script src="js/clock.js"></script>
 </body>

@@ -94,21 +94,35 @@ const adhkar = [
         finishTimes: 0
     }
 ];
-const updatedAdhkar = adhkar.map((dhikr, index) => (
+let updatedAdhkar = adhkar.map((dhikr, index) => (
     {
         ...dhikr,
         id: index + 1
     }
 ));
+
+// Restore "updatedAdhkar" From localStorage If Present
+let savedUpdatedAdhkar = localStorage.getItem("adhkarArray");
+if (savedUpdatedAdhkar) updatedAdhkar = JSON.parse(savedUpdatedAdhkar); 
+
 const adhkarContainer = document.querySelector(".adhkar-area");
 
 // Main Settings
 let counter;
 let finishCounter;
-let currentLevel;
-let reachedLevelsCount;
 
-/* -- Template Using "getter/setter" To Trigger A Function When A Variable Get Updated -- */
+// Initialize currentLevel and reachedLevelsCount with defaults if not present in localStorage
+const savedLevel = localStorage.getItem("current-level");
+const savedLevelsCount = localStorage.getItem("reached-levels-count");
+
+let currentLevel = savedLevel ? JSON.parse(savedLevel) : "";
+let reachedLevelsCount = savedLevelsCount ? JSON.parse(savedLevelsCount) : 0;
+
+// Also update localStorage if not present
+if (!savedLevel) localStorage.setItem("current-level", JSON.stringify(currentLevel));
+if (!savedLevelsCount) localStorage.setItem("reached-levels-count", JSON.stringify(reachedLevelsCount));
+
+/* -- Template Using "Getters & Setters" To Trigger A Function When A Variable Get Updated -- */
 
 // 1. State object with custom getter/setter
 const reactiveState = {
@@ -147,73 +161,127 @@ function onRLCChange(oldValue, newValue) {
 // reactiveState.reachedLevelsCount = 1; // Triggers the onRLCChange() function
 
 // Create The Dhikr Box Element
-updatedAdhkar.forEach((dhikr, index) => {
-    
-    const dhikrBox = document.createElement("div");
-    dhikrBox.setAttribute("class", "dhikr-box");
-    dhikrBox.setAttribute("data-index", index);
-
-    dhikrBox.innerHTML = `
-        <div class="info">
-            <h3>${dhikr.text}</h3>
-            <span>${dhikr.countFinish < 10 ? `0${dhikr.countFinish}` : dhikr.countFinish}</span>
-        </div>
-        <p class="meaning">${dhikr.meaning || "غير محدد"}</p>
-    `;
-
-    adhkarContainer.appendChild(dhikrBox);
-
-});
-
-// Precess Of Selecting The Needed Dhikr 
-const adhkarArray = Array.from(document.getElementsByClassName("dhikr-box"));
-
-adhkarArray.forEach(dhikrEl => {
-    dhikrEl.addEventListener("click", (e) => {
-
-        adhkarArray.forEach(dEl => dEl.classList.remove("selected"));
+function displayAdhkar() {
+    updatedAdhkar.forEach((dhikr, index) => {
         
-        e.currentTarget.classList.add("selected");
+        const dhikrBox = document.createElement("div");
+        dhikrBox.setAttribute("class", "dhikr-box");
+        dhikrBox.setAttribute("data-index", index);
 
-        // Get The Selected Dhikr Object
-        let dataIndex = Number(e.currentTarget.getAttribute("data-index"));
-        let dhikrObject = updatedAdhkar[dataIndex];
-        addData(dhikrObject);
+        dhikrBox.innerHTML = `
+            <div class="info">
+                <span>${dhikr.countFinish < 10 ? `0${dhikr.countFinish}` : dhikr.countFinish}</span>
+                ${
+                    dhikr.fromUser 
+                    ? `<button id="remove-dhikr"><i class="ri-delete-bin-5-line"></i></button>`
+                    : ''
+                }
+            </div>
+            
+            <div class="text">
+                <h3>${dhikr.text}</h3>
+                <p class="meaning">${dhikr.meaning || "غير محدد"}</p>
+            </div>
+        `;
 
-        // Reset Counters
-        counter = 0;
-        finishCounter = 0;
-
-        // Reset User Progress Or Rank
-        currentLevel = "";
-        reachedLevelsCount = 0;
-        saveLevel();
-        saveLevelsCount();
-        displayRank(currentLevel, reactiveState.reachedLevelsCount);
-
-        // Close The Sidebar
-        sidebar.classList.remove("show");
+        adhkarContainer.appendChild(dhikrBox);
 
     });
+};
 
-});
+// Precess Of Selecting The Needed Dhikr | Or Remove It
+let adhkarArrayEls;
+function attachDhikrBoxListeners() {  
+    adhkarArrayEls = Array.from(document.getElementsByClassName("dhikr-box"));
+
+    adhkarArrayEls.forEach(dhikrEl => {
+        dhikrEl.addEventListener("click", (e) => {
+
+            // Get The Remove Btn And It's Icon From "dhikrEl"
+            const removeDhikrBtn = dhikrEl.querySelector("#remove-dhikr");
+            const removeDhikrBtnIcon = dhikrEl.querySelector("#remove-dhikr i");
+
+            if (e.target === removeDhikrBtn || e.target === removeDhikrBtnIcon) {
+
+                const dObject = updatedAdhkar[Number(e.currentTarget.getAttribute("data-index"))]
+
+                deleteDhikr(e.currentTarget, dObject);
+
+            } else {
+
+                adhkarArrayEls.forEach(dEl => dEl.classList.remove("selected"));
+                
+                e.currentTarget.classList.add("selected");
+
+                // Get The Selected Dhikr Object
+                let dataIndex = Number(e.currentTarget.getAttribute("data-index"));
+                let dhikrObject = updatedAdhkar[dataIndex];
+                addData(dhikrObject);
+
+                // Reset Counters
+                counter = 0;
+                finishCounter = 0;
+
+                // Reset User Progress Or Rank
+                currentLevel = "";
+                reactiveState.reachedLevelsCount = 0;
+                saveLevel();
+                saveLevelsCount();
+                displayRank(currentLevel, reactiveState.reachedLevelsCount);
+
+                // Close The Sidebar
+                sidebar.classList.remove("show");
+            
+            }
+
+        });
+
+    });
+};
+
+displayAdhkar();
+attachDhikrBoxListeners();
+
+// Delete A Dhikr That Entered From User
+function deleteDhikr(dEl, dObject) {
+
+    // Remove The Object "dObject" From It's Array
+    const filteredUpdatedAdhkar = updatedAdhkar.filter(obj => obj.id !== dObject.id);
+    updatedAdhkar = filteredUpdatedAdhkar; // <-- keep memory in sync
+
+    // Re-render the list and re-attach listeners
+    adhkarContainer.innerHTML = "";
+    displayAdhkar();
+    attachDhikrBoxListeners();
+
+    // Save The "filteredUpdatedAdhkar" To Local Storage
+    window.localStorage.setItem("adhkarArray", JSON.stringify(updatedAdhkar));
+
+    // Mark the last dhikr as selected (if any left)
+    if (updatedAdhkar.length > 0) {
+        const lastDhikr = updatedAdhkar[updatedAdhkar.length - 1];
+        adhkarArrayEls.forEach(el => el.classList.remove("selected"));
+        const lastDhikrEl = adhkarArrayEls.find(el => Number(el.getAttribute("data-index")) === updatedAdhkar.indexOf(lastDhikr));
+        lastDhikrEl.classList.add("selected");
+        addData(lastDhikr);
+    }
+
+};
 
 // Save The First "DhikrObject" As The Default One 
 // This Done Before The User Select Something Or When There Is No Saved Dhikr
-if (!localStorage.getItem("dhikrObject")) saveDhikr(updatedAdhkar[0]);
-
 // Add The "selected" Class To The "dhikrEl" Depends On The Saved Dhikr Object Within The Local Storage
 let savedDhikr = getSavedDhikr();
 if (savedDhikr) {
-    let filteredAdhkarArray = adhkarArray.filter(dhikrEl => (dhikrEl.getAttribute("data-index") == (savedDhikr.id - 1)));
+    let filteredAdhkarArray = adhkarArrayEls.filter(dhikrEl => (dhikrEl.getAttribute("data-index") == (savedDhikr.id - 1)));
     filteredAdhkarArray.forEach(element => element.classList.add("selected"));
-};
+} else saveDhikr(updatedAdhkar[0]);
 
 // Select Some Elements & Settings
 const dhikrHolder = document.querySelector(".dhikr p");
 const dhikrFinish = document.querySelector(".counter-holder .finish");
 const dhikrCount = document.querySelector(".counter-holder .count");
-const totalFinishes = document.querySelector(".total-finishes p span");
+const totalFinishes = document.querySelector(".total-finishes p");
 
 function addData(dhikrObj) {
     
@@ -230,25 +298,25 @@ function addData(dhikrObj) {
 
 function saveDhikr(dObject) {
     localStorage.setItem("dhikrObject", JSON.stringify(dObject));
-}
+};
 
 function getSavedDhikr() {
-    let savedDhikrObject = localStorage.getItem("dhikrObject") ? JSON.parse(localStorage.getItem("dhikrObject")) : alert("There is no saved dhikr yet try to select one!");
+    let savedDhikrObject = localStorage.getItem("dhikrObject") ? JSON.parse(localStorage.getItem("dhikrObject")) : console.error("There is no saved dhikr yet try to select one!");
     return savedDhikrObject;
-}
+};
 
 /* --- Build Sound Control --- */
 const soundsEffects = [
     {
-        path: "assets/audio/click.mp3",
+        path: "/assets/audio/click.mp3",
         bgColor: "rgba(8, 74, 73, 0.7)"
     },
     {
-        path: "assets/audio/pen-click.mp3",
+        path: "/assets/audio/pen-click.mp3",
         bgColor: "rgba(203, 154, 52, 0.7)"
     },
     {
-        path: "assets/audio/rightanswer.mp3",
+        path: "/assets/audio/rightanswer.mp3",
         bgColor: "rgba(203, 24, 20, 0.7)"
     }
 ];
@@ -290,7 +358,7 @@ soundBoxes.forEach(soundBox => {
 
 // Pick A Sound And Save It As The Default One 
 // This Done Before The User Select Something Or When There Is No Saved Sound
-if (!localStorage.getItem("chosenSound")) localStorage.setItem("chosenSound", JSON.stringify(soundBoxes[1].getAttribute("data-sound")));
+if (!localStorage.getItem("chosenSound")) localStorage.setItem("chosenSound", JSON.stringify(soundBoxes[0].getAttribute("data-sound")));
 
 // Add The "active" Class To The "soundBox" Depends On The Saved Sound Within The Local Storage
 let savedSound = getSavedSound();
@@ -300,9 +368,9 @@ if (savedSound) {
 };
 
 function getSavedSound() {
-    let savedSound = localStorage.getItem("chosenSound") ? JSON.parse(localStorage.getItem("chosenSound")) : alert("There is no saved sound!");
+    let savedSound = localStorage.getItem("chosenSound") ? JSON.parse(localStorage.getItem("chosenSound")) : console.error("There is no saved sound yet!");
     return savedSound;
-}
+};
 
 soundsControl.onclick = () => { soundsContainer.classList.toggle("show") };
 
@@ -316,7 +384,7 @@ function toggleIsEnabled() {
     // Toggle Process
     isEnabled = !isEnabled;
 
-    // Check And Change The HTML
+    // Check For Playing Or Not Playing The Sound
     soundChecker();
 
 };
@@ -336,7 +404,7 @@ function soundChecker() {
         soundBtn.classList.remove("disable");
         icon.classList.replace("ri-volume-mute-line", "ri-volume-up-line");
 
-    };
+    }
 };
 
 soundBtn.addEventListener("click", toggleIsEnabled);
@@ -347,7 +415,7 @@ const countBtn = document.getElementById("countBtn");
 // Restore saved dhikr object from localStorage
 document.addEventListener("DOMContentLoaded", () => {
     let savedDhikr = getSavedDhikr();
-    addData(savedDhikr);
+    if (savedDhikr) { addData(savedDhikr); } 
     counter = savedDhikr.actualCount || 0;
     finishCounter = savedDhikr.finishTimes || 0;
 });
@@ -358,6 +426,24 @@ let soundEffect = new Audio();
 // Help When The Page Reloads
 soundEffect.src = getSavedSound(); 
 
+/* --- SVG Counting Border Fill Animation --- */
+const progressCircle = document.getElementById('svg-progress');
+const radius = progressCircle.getAttribute("r");
+const circumference = (2 * Math.PI) * radius;
+
+progressCircle.style.strokeDasharray = circumference;
+progressCircle.style.strokeDashoffset = circumference;
+
+function setProgress(count, total) {
+    const percent = count / total;
+    const offset = circumference * (1 - percent);
+    progressCircle.style.strokeDashoffset = offset;
+};
+
+function resetProgress() {
+    progressCircle.style.strokeDashoffset = circumference;
+}
+
 function addToCount() {
 
     // Get The Saved Dhikr Object From Local Storage
@@ -366,6 +452,8 @@ function addToCount() {
     // Increase The "actualCount"
     counter++;
     savedObject.actualCount = counter;
+
+    setProgress(counter, savedObject.countFinish);
 
     // If The User Reach The Finish Point
     if (savedObject.actualCount === (savedObject.countFinish + 1)) {
@@ -381,8 +469,11 @@ function addToCount() {
         // Set The Rank Of The User , Save It and Incease The Count Of The Reached Levels
         setRank(savedObject.finishTimes);
         saveLevel();
-        
-    }
+
+        // Reset The Circle Progress SVG
+        resetProgress();
+
+    };
 
     // Save The "savedObject" After Editing It
     addData(savedObject);
@@ -392,6 +483,7 @@ function addToCount() {
 
     // Play The Sound Effect
     isEnabled ? soundEffect.play() : false;
+
 };
 
 countBtn.addEventListener("click", addToCount);
@@ -414,6 +506,7 @@ function resetAll() {
     reactiveState.reachedLevelsCount = 0;
     saveLevel();
     saveLevelsCount();
+    resetProgress();
 };
 
 // Click Events
@@ -425,7 +518,7 @@ okBtn.onclick = () => {
 };
 
 /* --- Adding A New Dhikr --- */
-/* -- I Think I Should Stop This Because It's Leads To Many Problems -- 
+/* -- I Think I Should Stop This Because It's Leads To Many Problems -- */
 const addBtn = document.getElementById("addBtn");
 const dhikrFormContainer = document.querySelector(".dhikr-form");
 const dhikrForm = dhikrFormContainer.querySelector("form");
@@ -452,10 +545,10 @@ function getEnteredData() {
     let enteredCountFinish = dhikrCountFinishIn.value;
 
     // Handle Data Existence
-    if (enteredText.trim() === "" || enteredCountFinish.trim() === "") {
+    if (enteredText.trim() === "" || enteredCountFinish.trim() === "" || enteredCountFinish === 0) {
         
         dhikrTextIn.placeholder = "هذا الحقل لا يجب أن يكون فارغا";
-        dhikrCountFinishIn.placeholder = "هذا الحقل لا يجب أن يكون فارغا";
+        dhikrCountFinishIn.placeholder = "هذا الحقل لا يجب أن يكون فارغا او يساوي 0";
 
         dhikrTextIn.classList.add("invalid");
         dhikrCountFinishIn.classList.add("invalid");
@@ -470,6 +563,11 @@ function getEnteredData() {
 
 function addNewDhikr(dText, dCountFinish, dMeaning) {
     
+    // Reset Inputs
+    dhikrTextIn.value = "";
+    dhikrMeaningIn.value = "";
+    dhikrCountFinishIn.value = 1;
+
     // Make The "dhikrObject" Structure
     const newDhikrObject = {
         text: dText,
@@ -477,22 +575,42 @@ function addNewDhikr(dText, dCountFinish, dMeaning) {
         countFinish: Number(dCountFinish),
         actualCount: 0,
         finishTimes: 0,
-        id: updatedAdhkar.length
-    }
+        id: updatedAdhkar.length + 1,
+        fromUser: true
+    };
 
-    // Appends "newDhikrObject" To The End Of The "updatedAdhkar"
+    
+    // Append The "newDhikrObject" To The End Of The "updatedAdhkar"
     updatedAdhkar.push(newDhikrObject);
+    
+    // Save The "updatedAdhkar"
+    window.localStorage.setItem("adhkarArray", JSON.stringify(updatedAdhkar));
+    
+    // Re-render the list and re-attach listeners
+    adhkarContainer.innerHTML = "";
+    displayAdhkar();
+    attachDhikrBoxListeners();
+    
+    // Get The Specific Dhikr Element Based On The "newDhikrObject"
+    const newAdhkarArrayEls = Array.from(document.getElementsByClassName("dhikr-box"));
+    const dhikrEl = newAdhkarArrayEls.find(el => Number(el.getAttribute("data-index")) === (newDhikrObject.id - 1));
+    if (dhikrEl) dhikrEl.classList.add("selected");
+    adhkarArrayEls = newAdhkarArrayEls;
 
-    console.log(updatedAdhkar);
-
-    // Now Save The "newDhikrObject"
+    // Now Save The "newDhikrObject" And Show It 
     addData(newDhikrObject);
+
+    // Close The Form
+    closeForm.click();
+
+    // Close The Sidebar
+    hideSideBar.click();
 
 };
 
 saveBtn.addEventListener("click", () => {
     getEnteredData();
-}); */
+}); 
 
 /* --- Gamification | Rank System --- */
 const rankSystemBtn = document.getElementById("rankSystemBtn");
@@ -618,6 +736,7 @@ function displayRank(cl, rlc) {
         // ! This approach is about: display only the current level and don't care about the previous reached ones
         // Get The Matched "levelBox" From The "levelBoxes"
         // const filtredLevelBoxes = levelBoxes.filter((levelBox) => levelBox.getAttribute("data-title") === cl );
+
         // // After The Previous Step We Now Add The Styles Of The Reached Level
         // filtredLevelBoxes[0].classList.add("reached");
 
@@ -627,9 +746,8 @@ function displayRank(cl, rlc) {
 
     } else {
 
-        // If There Is No Progress Then Unhighlight All The "levelBoxes"
-        levelBoxes.forEach(lb => lb.classList.remove
-        ("reached"));
+        // If There Is No Progress Then Unhighlit All The "levelBoxes"
+        levelBoxes.forEach(lb => lb.classList.remove("reached"));
 
     };
 
